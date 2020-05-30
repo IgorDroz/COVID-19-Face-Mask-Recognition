@@ -15,8 +15,8 @@ import shutil
 from densenet import DenseNet
 
 
-batch_size = 13
-v_batch_size = 3
+batch_size = 35
+v_batch_size = 15
 
 epochs = 100
 seed = 42
@@ -31,13 +31,7 @@ class MaskDataset(Dataset):
 	"""Covid19 Mask dataset."""
 
 	def __init__(self, list_IDs, labels, transform=None , train=True):
-		"""
-		Args:
-			csv_file (string): Path to the csv file with annotations.
-			root_dir (string): Directory with all the images.
-			transform (callable, optional): Optional transform to be applied
-				on a sample.
-		"""
+
 		self.labels = labels
 		self.list_IDs = list_IDs
 		self.transform = transform
@@ -103,7 +97,7 @@ def main():
 	channel_stds = (0.2411, 0.2299, 0.2262)
 
 	trainTransform = transforms.Compose([
-		transforms.Resize((128,128),interpolation=Image.BICUBIC),
+		transforms.Resize((64,64),interpolation=Image.BICUBIC),
 	    transforms.RandomHorizontalFlip(),
 	    transforms.ToTensor(),
 	    transforms.Normalize(channel_means, channel_stds)
@@ -115,7 +109,7 @@ def main():
 	validation_set = MaskDataset(X_val, y_val, trainTransform)
 	validation_set_generator = DataLoader(validation_set, **v_params)
 
-	net = DenseNet(growthRate=16, depth=60, reduction=0.5,bottleneck=True, nClasses=1)
+	net = DenseNet(growthRate=12, depth=48, reduction=0.5,bottleneck=True, nClasses=1)
 
 	print('  + Number of params: {}'.format(
 		sum([p.data.nelement() for p in net.parameters()])))

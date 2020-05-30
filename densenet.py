@@ -106,8 +106,8 @@ class DenseNet(nn.Module):
 	def __init__(self, growthRate, depth, reduction, nClasses, bottleneck):
 		super(DenseNet, self).__init__()
 
-		dense_layers = ['dense'+str(i) for i in range(1,5)]
-		trans_layers = ['trans'+str(i) for i in range(1,5)]
+		dense_layers = ['dense'+str(i) for i in range(1,4)]
+		trans_layers = ['trans'+str(i) for i in range(1,4)]
 		# cAttn_layers = ['cAttn' + str(i) for i in range(1, 5)]
 		# sAttn_layers = ['sAttn' + str(i) for i in range(1, 5)]
 
@@ -133,7 +133,7 @@ class DenseNet(nn.Module):
 			setattr(self, trans_layers[i],  Transition(nChannels, nOutChannels))
 
 		nChannels = nOutChannels
-		self.dense5 = DenseBlock(nChannels, growthRate, nDenseBlocks, bottleneck)
+		self.dense4 = DenseBlock(nChannels, growthRate, nDenseBlocks, bottleneck)
 		nChannels += nDenseBlocks * growthRate
 
 		self.bn1 = nn.BatchNorm2d(nChannels)
@@ -165,8 +165,7 @@ class DenseNet(nn.Module):
 		out = self.trans1(torch.cat((self.dense1(out), out), 1))
 		out = self.trans2(torch.cat((self.dense2(out), out), 1))
 		out = self.trans3(torch.cat((self.dense3(out), out), 1))
-		out = self.trans4(torch.cat((self.dense4(out), out), 1))
-		out = torch.cat((self.dense5(out), out), 1)
+		out = torch.cat((self.dense4(out), out), 1)
 		out = torch.squeeze(F.max_pool2d(F.relu(self.bn1(out)), 8))
 		out = torch.sigmoid(self.fc(out))
 		return out
