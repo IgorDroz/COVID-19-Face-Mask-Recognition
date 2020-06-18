@@ -57,7 +57,8 @@ def evaluate_hw2(path_=None):
 		predictions.extend(predicted)
 		y_true.extend(labels)
 	print('F1 score of the model on the {} test images: {:.4f}'.format(testing_generator.__len__(),f1_score(y_true,predictions)))
-
+	
+	data = [os.path.split(f)[-1] for f in data]
 	return zip(np.array(data),predictions)
 
 
