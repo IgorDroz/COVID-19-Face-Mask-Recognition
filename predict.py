@@ -1,5 +1,6 @@
 import os
 import argparse
+from evaluation import *
 import numpy as np
 import pandas as pd
 
@@ -14,11 +15,8 @@ files = os.listdir(args.input_folder)
 
 #####
 # TODO - your prediction code here
+prediction_df = pd.DataFrame(evaluate_hw2(args.input_folder),columns=['id','label'])
 
-# Example (A VERY BAD ONE):
-y_pred = np.random.randint(2, size=len(files))
-prediction_df = pd.DataFrame(zip(files, y_pred), columns=['id', 'label'])
-####
 
 # TODO - How to export prediction results
 prediction_df.to_csv("prediction.csv", index=False, header=False)
